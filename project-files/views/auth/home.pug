@@ -1,0 +1,47 @@
+doctype html
+head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Doc&apos;s Conference
+  link(rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css')
+  link(rel='stylesheet' href='https://www.w3schools.com/lib/w3-colors-metro.css')
+  link(rel='stylesheet' href='/stylesheets/homeScreen.css')
+  link(rel='icon' href='/images/DocConference64.png' type='image/x-icon')
+  link(rel='icon' href='/images/DocConference.svg' type='image/svg+xml')
+  script(src='/javascripts/homeScreen.js' charset='utf-8')
+.title.w3-padding-16.w3-green.w3-display-container(style='z-index:1;')
+  .logo.w3-container.w3-display-left
+    a(href='#')
+      img#logo(src='/images/DocConference.svg' alt='WebApp Logo')
+  .title-options.w3-container.w3-display-right
+    .center
+      //a(href='files.html' target='_blank')
+        //button.w3-btn.w3-metro-green Files
+      .w3-dropdown-hover
+        span#userEmail.w3-btn.w3-metro-green .
+        .w3-dropdown-content.w3-bar-block.w3-border.w3-border-black(style='right:0;width:100%;')
+          a.w3-bar-item.w3-button(href='#') Account
+          a.w3-bar-item.w3-button(href='logout' onclick='logOut()') Log Out
+.content.w3-pale-green
+  .meeting-options.w3-display-container
+    .w3-display-middle
+      .w3-cell-row
+        .w3-container.w3-cell.w3-cell-middle
+          a(href='details')
+            #new-meeting.w3-display-container.w3-white.w3-topbar.w3-bottombar.w3-leftbar.w3-rightbar.w3-round-xlarge.w3-border-dark-gray
+              #new-meeting-1.w3-display-middle.w3-black
+              #new-meeting-2.w3-display-middle.w3-black
+          .w3-center New Meeting
+        #join-meeting.w3-container.w3-cell.w3-cell-middle
+          .w3-cell-row
+            form#join-meeting-textbox.w3-cell(action='#')
+              input.w3-input.w3-border-top.w3-border-bottom.w3-border-left.w3-border-right.w3-round-large.w3-border-dark-gray(type='text' placeholder='Meeting code')
+            .w3-cell(style='width: 4px;')
+            .w3-cell.w3-cell-middle
+              a(href='/auth/meet' onclick='testFunction()')
+                #join-meeting-enter.w3-display-container.w3-gray.w3-border-top.w3-border-bottom.w3-border-left.w3-border-right.w3-round-large.w3-border-dark-gray
+                  img#enter-icon.w3-display-middle(src='/images/enter.png' alt='Join Meeting Button')
+          .w3-center Join Meeting
+  .past-meetings.w3-display-container(style='z-index:0;')
+    .w3-display-middle.w3-padding-16(style='height: 100%;')
+      iframe(src='/past' title='Past Meetings Section')

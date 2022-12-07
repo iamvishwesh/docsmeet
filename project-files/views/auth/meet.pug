@@ -1,0 +1,417 @@
+head
+  title Doc&apos;s Conference
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1')
+  link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet')
+  script(src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js')
+  script(src='https://unpkg.com/markerjs2/markerjs2.js')
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.0/socket.io.min.js')
+  script(src='http://cdn.jsdelivr.net/g/filesaver.js')
+  script(src='https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js')
+  style.
+    .report{
+    height: 65vh;
+    }
+    .blue-black{
+    background-color:#021C1E;
+    }
+    .cadet-blue{
+    background-color: #004445;
+    }
+    .rain{
+    background-color: #2C7873;
+    }
+    .chatbox{
+    height: 11vh;
+    }
+    .sendbtn{
+    font-size: 4vh;
+    color: #021C1E;
+    border-radius: 50%;
+    border:2px solid white;
+    text-align: center;
+    width: 8vh;
+    height: 8vh;
+    background-color: white;
+    }
+    .chat{
+    height: 8vh;
+    margin-right:10px;
+    }
+    .img{
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    }
+    .btn{
+    background-color: none;
+    border: none;
+    border-radius: 60%;
+    }
+    .edit{
+    width: 100%; /* or any custom size */
+    height: 100%;
+    object-fit: contain;
+    }
+    body{
+    background-color:#021C1E;
+    }
+    /*.d_btn{
+    color: aliceblue;
+    background-color: black;
+    border-radius: 10%;
+    margin-left: 45%;
+    border:none;
+    padding: 3px;
+    margin-top: 3px;
+    display: none;
+    }*/
+    #chats{
+    height: 80vh;
+    border-radius: 1%;
+    overflow-wrap: anywhere;
+    overflow: scroll;
+    }
+
+    .dropup {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropup-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      bottom: 50px;
+      z-index: 1;
+    }
+
+    .dropup-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropup-content a:hover {background-color: #ccc}
+
+    .dropup:hover .dropup-content {
+      display: block;
+    }
+
+    .dropup:hover .dropbtn {
+      background-color: #2980B9;
+    }
+    #vid{
+      height:100px;
+    }
+    .vid-elem {
+      width: 20%;
+      height: auto;
+      border: 1px solid #fff;
+      margin-left: 2px;
+    }
+
+.container-fluid.row.mt-2
+  .col-sm-8.border
+    #vid.w-100.p-2.cadet-blue
+    video#layer.report.w-100.mt-1.mb-5.cadet-blue(style="display:none")
+    canvas#marker.report.w-100.mt-1.mb-1.cadet-blue
+    .w-100.p-2.cadet-blue.text-center.mb-2
+      button#microphone.btn
+        img#mic.img(src='/images/microphone.png')
+      a(href="home" style="text-decoration:none;")  
+        button.btn
+          img.img(src='/images/disconnect.png')
+      button.btn(onclick='showMarkerArea();')
+        img.img(src='/images/edit-tools.png')
+      .dropup
+        button#list.btn 
+          img.bg-secondary.img(src='/images/selectDocument.png')
+        #files.dropup-content
+      button#record.btn
+        img#rbtn.img(src='/images/record.png')
+    // button id="download" class="d_btn">download</button
+  .col-sm-4.border.rain
+    p#chats.bg-white.w-100.mt-2.p-2  
+    .cadet-blue.p-2.chatbox
+      //form(method='post' action='/auth/chats' enctype='application/x-www-form-urlencoded' onsubmit="chat_send(event)" )
+      input#chat_msg.col-sm-10.chat(type='text')
+      button#chatsend.sendbtn  &#x27A3;   
+  script.
+    const target = document.getElementById("marker");
+    const markerArea = new markerjs2.MarkerArea(target);
+    const ctx = target.getContext('2d');
+    function setImage(name){
+      let image = new Image();
+      var path = name.toString();
+      image.src = '/reports/'+path;
+      image.addEventListener('load', () => {
+      ctx.drawImage(image, 0, 0 , target.width, target.height);
+      });
+    }
+    
+    markerArea.addEventListener("render", (event) => {
+    const ctx = target.getContext('2d');
+    let img = new Image();
+    img.src = event.dataUrl;
+    img.addEventListener('load', () => {
+    ctx.drawImage(img, 0, 0, target.width, target.height)
+    downloadImage();
+    //ctx.clearRect(0, 0, target.width, target.height);
+    });
+    });
+    /* const d_btn = document.getElementById("download");
+    d_btn.addEventListener("click", function () {
+    });*/
+    function showMarkerArea() {
+    markerArea.show();
+    var close =document.getElementsByClassName("__markerjs2_toolbar_button __markerjs2_toolbar_button_colors");
+    close[10].addEventListener("click",()=>{
+          //alert("cliicked");
+          const ctx = target.getContext('2d');
+          //ctx.drawImage(none, 0, 0, target.width, target.height)
+          ctx.clearRect(0, 0, target.width, target.height);
+    })
+    }
+    function downloadImage(){
+    target.toBlob(blob => saveAs(blob, "report.png"));
+    }
+script.
+  let start = document.getElementById('record'),
+  mediaRecorder;
+  var click =0;
+  var rbtn = document.getElementById("rbtn");
+  rbtn.style.backgroundColor="red";
+  start.addEventListener('click', async function(){
+  if(click==0){
+    rbtn.style.backgroundColor="green";
+  let stream = await recordScreen();
+  let mimeType = 'video/webm';
+  mediaRecorder = createRecorder(stream, mimeType);
+  let node = document.createElement("p");
+  node.textContent = "Started recording";
+  document.body.appendChild(node);
+  click=1;
+  }
+  })
+  start.addEventListener('click', function(){
+  if(click==1){
+    rbtn.style.backgroundColor="red";
+  mediaRecorder.stop();
+  let node = document.createElement("p");
+  node.textContent = "Stopped recording";
+  document.body.appendChild(node);
+  click=0;
+  }
+  })
+  async function recordScreen() {
+  return await navigator.mediaDevices.getDisplayMedia({
+  audio: true,
+  video: { mediaSource: "screen"}
+  });
+  }
+  function createRecorder (stream, mimeType) {
+  // the stream data is stored in this array
+  let recordedChunks = [];
+  let combined = new MediaStream([...stream.getTracks(), ...myVideo.srcObject.getAudioTracks()]);
+  const mediaRecorder = new MediaRecorder(combined);
+  mediaRecorder.ondataavailable = function (e) {
+  if (e.data.size > 0) {
+  recordedChunks.push(e.data);
+  }
+  };
+  mediaRecorder.onstop = function () {
+  saveFile(recordedChunks);
+  recordedChunks = [];
+  };
+  mediaRecorder.start(200); // For every 200ms the stream data will be stored in a separate chunk.
+  return mediaRecorder;
+  }
+  function saveFile(recordedChunks){
+  const blob = new Blob(recordedChunks, {
+  type: 'video/webm'
+  });
+  let filename = window.prompt('Enter file name'),
+  downloadLink = document.createElement('a');
+  downloadLink.href = URL.createObjectURL(blob);
+  downloadLink.download = `${filename}.webm`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  URL.revokeObjectURL(blob); // clear from memory
+  document.body.removeChild(downloadLink);
+  }
+script.
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "not found";
+  }
+ 
+  var vid =document.getElementById("vid");
+  var socket = io.connect("http://localhost:3000");
+  var chatsend = document.getElementById("chatsend");
+  var chat_msg = document.getElementById("chat_msg");
+  chatsend.addEventListener("click",function(){
+    socket.emit('chat',{
+      message: chat_msg.value.toString(),
+      handle: getCookie("userName")
+    })
+  });
+
+  var output = document.getElementById("chats");
+  socket.on('chat',function(data){
+  output.innerHTML+='<span><strong>'+data.handle+': </strong>'+data.message+"</span><br>"
+  });
+
+  const ROOM_ID = 'ed08ce5c-8a2f-43d1-977f-d21eb0f017ab';
+  var clicked = 0;
+  var mic = document.getElementById("mic");
+  var microphone = document.getElementById("microphone");
+  mic.style.backgroundColor = "red";
+  const peers = {}
+  const myVideo = document.createElement('video')
+  myVideo.className = "vid-elem";
+  myVideo.style.width="20%";
+  myVideo.style.height="auto";
+  myVideo.muted = true;
+
+  function connectToNewUser(userId, stream) {
+    const call = myPeer.call(userId, stream)
+    const video = document.createElement('video')
+    //video.muted = true;
+    video.className = "vid-elem";
+    console.log("conn", video)
+    vid.appendChild(video);
+
+    call.on('stream', userVideoStream => {
+      console.log("recv video", userVideoStream)
+      addVideoStream(video, userVideoStream)
+    })
+    call.on('close', () => {
+      video.remove()
+    })
+    socket.on('user-disconnected', userId => {
+      if (peers[userId]) peers[userId].close()
+    })
+
+    peers[userId] = call
+  }
+  var dropup =0;
+  socket.on('files',function(files){
+    console.log(files);
+      var btn_list = document.getElementById("list");
+      var flist = document.getElementById("files");
+
+      btn_list.addEventListener('click',function(){
+        if(dropup==0){
+          for (var file of files) {
+            var p = document.createElement('p');
+            var str = "setImage('"+file+"')";
+            p.setAttribute("class","file");
+            p.setAttribute("onclick",str.toString());
+            p.innerHTML = file.toString();
+            flist.appendChild(p);
+          }
+            dropup=1;         
+        }
+      })
+  })
+
+  
+
+  function addVideoStream(video, stream) {
+    video.srcObject = stream
+    video.addEventListener('loadedmetadata', () => {
+      video.play()
+    })
+  }
+
+  const myPeer = new Peer()
+
+  myPeer.on('open', id => {
+    console.log("open", id)
+    socket.emit('join-room', ROOM_ID, id)
+  })
+
+  myPeer.on('call', call => {
+    call.answer(myVideo.srcObject)
+    const video = document.createElement('video')
+    console.log("incoming call", call, video)
+    addUserVideoSource(video);
+
+    call.on('stream', userVideoStream => {
+      console.log("recv video 2", userVideoStream)
+      addVideoStream(video, userVideoStream)
+    })
+  })
+
+  var layer =  document.getElementById("layer");
+  function addUserVideoSource(vidElem) {
+    vidElem.className = "vid-elem";
+    vid.appendChild(vidElem);
+    vidElem.addEventListener("click", function () {
+      layer.style.display = 'block';
+      layer.srcObject = vidElem.srcObject;
+      layer.play();
+      target.style.display = 'none';
+    });
+  }
+    
+    /*var btns = document.getElementsByClassName("vid-elem");
+    console.log("Vids", btns)
+    for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener("click", function () {
+          layer.style.display='block';
+         layer.srcObject = this.srcObject;
+          target.style.display=none;
+        });
+    }*/
+      layer.addEventListener("click",()=>{
+        layer.style.display = 'none';
+        target.style.display = 'block';
+      }
+    )
+
+  socket.on('user-connected', userId => {
+    connectToNewUser(userId, myVideo.srcObject)
+  })
+  navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true
+  }).then(stream => {
+    let new_stream = new MediaStream();
+    stream.getTracks().forEach(track => new_stream.addTrack(track));
+    target.captureStream(30).getTracks().forEach(track => new_stream.addTrack(track));
+    addVideoStream(myVideo, new_stream)
+  })
+
+  //vid.appendChild(myVideo);
+
+  microphone.addEventListener("click", () => {
+    if (clicked == 0) {
+      mic.style.backgroundColor = "green";
+      clicked = 1;
+
+      myVideo.muted=false;
+    } else {
+      if (clicked == 1) {
+        mic.style.backgroundColor = "red";
+        clicked = 0;
+        myVideo.muted=true;
+      }
+    }
+  });
+
+

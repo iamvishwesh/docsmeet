@@ -1,0 +1,332 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Home
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js')
+  style.
+    .blue-black{
+    background-color:#021C1E;
+    }
+    .cadet-blue{
+    background-color: #004445;
+    }
+    .greenary{
+    background-color: #6FB98F;
+    }
+    body{
+    margin: auto;
+    background-color: #6FB98F;
+    }
+    a{
+    text-decoration: none;
+    font-size: medium;
+    }
+    p{
+    font-size: medium;
+    color: black;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    .top{
+    margin: 0%;
+    height: 60px;
+    color:white;
+    }
+    .top img{
+    float: left;
+    }
+    .top select{
+    float: right;
+    }
+    .top a{
+    float: right;
+    }
+    .bleft{
+    float: left;
+    width: 70%;
+    }
+    .bright{
+    float: right;
+    position: absolute;
+    top: 40%;
+    right: 5%;
+    }
+    h4{
+    color: black;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    #one{
+    position: absolute;
+    left: 10%;
+    top: 15%;
+    }
+    #two{
+    position: absolute;
+    left: 50%;
+    top: 15%;
+    }
+    #three{
+    position: absolute;
+    top: 55%;
+    left: 10%;
+    }
+    #four{
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    }
+    textarea{
+    border-radius: 10px;
+    }
+    button{
+    width: 150px;
+    border-radius: 10px;
+    background-color: green;
+    height: 40px;
+    color: white;
+    border: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: medium;
+    }
+    button:hover{
+    box-shadow: 0 0 0 4px rgb(50, 192, 50);
+    }
+    button:active{
+    background-color: rgb(78, 212, 78);
+    }
+    ul{
+    list-style: none;
+    }
+    #newu  li{
+    display: inline;
+    }
+    h5{
+    display: inline;
+    }
+    ul > li {
+    display: inline-block;
+    /* You can also add some margins here to make it look prettier */
+    }
+    @media screen and (max-width: 920px){
+    body{
+    height: 1000px;
+    }
+    #one{
+    position: absolute;
+    top: 30%;
+    left: 25%;
+    }
+    #two{
+    position: absolute;
+    top: 60%;
+    left: 25%;
+    }
+    #three{
+    position:absolute;
+    top: 80%;
+    left: 25%;
+    }
+    #four{
+    position: absolute;
+    left: 10%;
+    top: 750px;
+    }
+    .bright {
+    float: left;
+    position: absolute;
+    left: 60%;
+    top: 800px;
+    }
+    #uleft{
+    position: absolute;
+    left: 40%;
+    margin: auto;
+    }
+    #uright{
+    position: absolute;
+    left: 30%;
+    top: 10%;
+    }
+    .top{
+    margin: 0%;
+    height: 200px;
+    }
+    }
+.parent.cadet-blue
+  .top.cadet-blue
+    ul#uleft(style='position: absolute;list-style: none;bottom: 89%;')
+      li
+        img(src='/images/DocConference.svg' alt='' width='50px' height='50px')
+    ul#uright(style='position: absolute;list-style: none;right: 1%;bottom: 89%;')
+      //li#files
+        button(type='button') Files
+      li
+        p#user_email
+      li#logout
+        button(type='button' onclick=("logout()")) Logout
+  .bleft.greenary
+    #one
+      h4 Add Co-hosts:
+      textarea#cohost(name='' cols='30' rows='7' placeholder='enter emails')
+      p#cohost-mess(hidden='') Note:Please enter the cohosts
+    #two
+      h4 Meeting Time:
+      input#time(onchange='checkdate()' type='datetime-local' name='')
+      p#time-mess(hidden='') Note:Select future Date and time
+    #three
+      h4 Add Participants:
+      textarea#part(name='' cols='30' rows='7' placeholder='enter emails')
+      p#part-mess(hidden='') Note:Please enter the Participants
+    #four
+      h4(style='display: inline;') Add Files:
+      input#file(type='file' name='' multiple='' hidden='')
+      button#addfile(type='button' style='display: inline;width: 50px;' onclick="document.getElementById('file').click()") +
+      p#file-mess(hidden='') Note:Select at least one file
+      #filelist
+        ul#newu
+  .bright.greenary
+    ///button(type='button' onclick='lel()') Send Notification
+    br
+    br
+    button(onclick='joinmeet()') Join Meeting
+script.
+  function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i <ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        console.log(c.substring(name.length, c.length));
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "not found";
+  }
+  var userEmail = document.getElementById("user_email");
+  userEmail.style.color='white';
+  userEmail.innerText = getCookie("userEmail");//((document.cookie).split('='))[1];
+  console.log( getCookie("userEmail"));
+  var input = document.getElementById('file');
+  var output = document.getElementById('newu');
+  let cohost=[];
+  cohost=document.getElementById("cohost");
+  let part=document.getElementById("part");
+  let times=document.getElementById("time");
+  let files=[];
+  let filesex=[];
+  let filelen=0;
+  let timeflag=0;
+  function checkdate(){
+  let date=new Date(times.value);
+  let now=new Date();
+  if(date < now){
+  let time_mess=document.getElementById("time-mess").hidden=false;
+  }else {
+  timeflag=1;
+  let time_mess=document.getElementById("time-mess").hidden=true;
+  }
+  }
+  input.addEventListener('change', function(e) {
+  if (e.target.files.length > 0){
+  Array.from(e.target.files).forEach((file) => {
+  filelen+=1;
+  files[filelen]=file.name;
+  var li = document.createElement("li");
+  li.id="but"+filelen;
+  li.innerHTML += '<br>' +"<h5>"+ file.name+"</h5>";
+  li.innerHTML+=" <button onclick='but("+filelen+")' style='width:25px;height:25px'>x</button></li></br>";
+  output.appendChild(li);
+  })
+  }
+  if(filelen>0){
+  document.getElementById("file-mess").hidden=true;
+  }
+  });
+  function but(len){
+  filesex+=len;
+  document.getElementById("but"+len).remove();
+  }
+  function logout(){
+    window.location.href=('/auth/logout');
+  }
+  function joinmeet(){
+  let filenames;
+  let filenamestemp=[];
+  let partarr=part.value.replace(/\\r\n/g,'\n').split('\n');
+  let coarr=cohost.value.replace(/\\r\n/g,'\n').split('\n');
+  let formdata=new FormData();
+  if(partarr==""){
+  document.getElementById("part-mess").hidden=false;
+  }
+  if(coarr==""){
+  document.getElementById("cohost-mess").hidden=false;
+  }
+  if(filelen==0){
+  document.getElementById("file-mess").hidden=false;
+  }
+  if(timeflag==0){
+  document.getElementById("time-mess").hidden=false;
+  }
+  if(partarr!=""){
+  document.getElementById("part-mess").hidden=true;
+  }
+  if(coarr!=""){
+  document.getElementById("cohost-mess").hidden=true;
+  }
+  if(filelen!=0){
+  document.getElementById("file-mess").hidden=true;
+  }
+  if(timeflag!=0){
+  document.getElementById("time-mess").hidden=true;
+  }
+  if((coarr!="")&&(partarr!="")&&(filelen>0)&&(timeflag==1)){
+  document.getElementById("part-mess").hidden=true;
+  document.getElementById("cohost-mess").hidden=true;
+  document.getElementById("file-mess").hidden=true;
+  document.getElementById("time-mess").hidden=true;
+  filenames=document.getElementById("four").getElementsByTagName("h5");
+  for(let i=0;i<filenames.length;++i){
+  filenamestemp[i]=filenames[i].innerHTML;
+  }
+  formdata.append("email",userEmail.innerText);
+  formdata.append("time",times.value);
+  for(let i=0;i<coarr.length;++i){
+  formdata.append("cohost",coarr[i]);
+  }
+  for(let i=0;i<partarr.length;++i){
+  formdata.append("part",partarr[i]);
+  }
+  for(let i=0;i<filenamestemp.length;++i){
+  formdata.append("files",filenamestemp[i]);
+  }
+  console.log(formdata.getAll("time"));
+  console.log(JSON.stringify(formdata.getAll("cohost")));
+  console.log(formdata.getAll("part"));
+  console.log(formdata.getAll("files"));
+  console.log(formdata.getAll("email"));
+
+  var object = {};
+  formdata.forEach((value, key) => {
+      // Reflect.has in favor of: object.hasOwnProperty(key)
+      if(!Reflect.has(object, key)){
+          object[key] = value;
+          return;
+      }
+      if(!Array.isArray(object[key])){
+          object[key] = [object[key]];    
+      }
+      object[key].push(value);
+  });
+  var json = JSON.stringify(object);
+  fetch('/auth/next', {body: json, method: 'post', headers: {"Content-Type": "application/json"}})
+  //var http = new XMLHttpRequest();
+  //http.open('POST', '/auth/next');
+  //http.send(formdata);
+  }
+  }
+  

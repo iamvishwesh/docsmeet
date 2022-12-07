@@ -1,0 +1,28 @@
+doctype html
+head
+  meta(charset='utf-8')
+  title Past Meetings
+  link(rel='stylesheet' href='https://www.w3schools.com/w3css/4/w3.css')
+  link(rel='stylesheet' href='https://www.w3schools.com/lib/w3-theme-green.css')
+  script(src='/javascripts/pastMeetings.js' charset='utf-8')
+  style(media='screen').
+    /* scrollbar width */
+    ::-webkit-scrollbar {
+    width: 5px;
+    }
+    /* scrollbar bg */
+    ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    }
+    /* scrollbar colour */
+    ::-webkit-scrollbar-thumb {
+    background: #aaa;
+    }
+    /* scrollbar hover colour */
+    ::-webkit-scrollbar-thumb:hover {
+    background: #777;
+    }
+    a{
+    text-decoration: none;
+    }
+#pageBody(onload="loadPastMeetings()")

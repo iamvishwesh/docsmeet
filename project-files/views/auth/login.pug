@@ -1,0 +1,62 @@
+doctype html
+head
+  title= title
+  meta(charset='utf-8')
+  link(rel='stylesheet', href='/stylesheets/login.css')
+  link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+  style.
+  
+    .blue-black{
+    background-color:#021C1E;
+    }
+    .cadet-blue{
+    background-color: #004445;
+    }
+    .greenary{
+    background-color: #6FB98F;
+    }
+.gradient-custom
+  section.vh-100
+    .row.d-flex.justify-content-center.align-items-center.h-100.greenary
+      .col-12.col-md-8.col-lg-6.col-xl-5
+        .card.cadet-blue.text-white(style='border-radius: 1rem;')
+          .card-body.p-5.text-center
+            form(name='form1' action="/auth/authentication" method="post" onsubmit='validateEmail()')
+              .mb-md-5
+                h2.fw-bold.mb-2.text-uppercase Login
+                p.text-white-50.mb-5.pb-lg-2 Please enter your login and password!
+                .form-floating.form-white.mb-3
+                  input#typeEmailX.form-control.form-control-lg(type='email' name='email' placeholder='name@example.com')
+                  label.form-label(for='typeEmailX') Email
+                .form-floating.form-white.mb-3
+                  input#typePasswordX.form-control.form-control-lg(type='password' name='password' placeholder='password')
+                  label.form-label(for='typePasswordX') Password
+                p.small.mb-5.pb-lg-2
+                  a.text-white-50(href='#')
+                    | Forgot
+                    | password?
+                button.btn.btn-outline-light.btn-lg.px-5(type='submit') Login
+                if messages
+                    for error, i in messages
+                      div.alert.alert-danger.mt-2 #{ error }
+            div
+              span.mb-0
+                | Don&apos;t have an account? 
+                a.text-white-50.fw-bold(href='/register') Sign Up
+                
+script.
+  function validateEmail() {
+  //e.preventDefault();
+  const user_email = document.form1.typeEmailX;
+  var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  if (user_email.value.match(mailformat)) {
+  alert("Valid email address!");
+  user_email.focus();
+  return true;
+  }
+  else {
+  alert("You have entered an invalid email address!");
+  user_email.focus();
+  return false;
+  }
+  }

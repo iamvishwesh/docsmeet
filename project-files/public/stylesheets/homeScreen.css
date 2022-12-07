@@ -1,0 +1,47 @@
+body{
+	display: flex;
+	flex-direction: column;
+}
+.title{
+	flex: 10vh;
+}
+.content{
+	flex: 90vh;
+	display: flex;
+}
+.meeting-options{
+	flex: 75vw;
+}
+.past-meetings{
+	flex: 25vw;
+}
+#logo{
+	width: 70px;
+}
+#new-meeting{
+	height: 100px;
+	width: 100px;
+}
+#new-meeting-1{
+	height: 70px;
+	width: 5px;
+}
+#new-meeting-2{
+	height: 5px;
+	width: 70px;
+}
+#join-meeting-textbox{
+	width: 200px;
+}
+#join-meeting-enter{
+	height: 40px;
+	width: 40px;
+}
+#enter-icon{
+	position: relative;
+	height: 60%;
+}
+iframe{
+	width: auto;
+	height: 100%;
+}
